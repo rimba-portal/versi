@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Rimba\Versioning\Http\UI\Admin\Resources\Versions\Pages;
+
+use Rimba\Versioning\Http\UI\Admin\Resources\Versions\VersionResource;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\ViewAction;
+use Filament\Resources\Pages\EditRecord;
+
+class EditVersion extends EditRecord
+{
+    protected static string $resource = VersionResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            ViewAction::make(),
+            DeleteAction::make(),
+        ];
+    }
+}
