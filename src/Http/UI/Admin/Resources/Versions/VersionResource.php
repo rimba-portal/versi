@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Rimba\Versioning\Http\UI\Admin\Resources\Versions;
 
 use BackedEnum;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Table;
 use Rimba\Versioning\Http\UI\Admin\Resources\Versions\Pages\CreateVersion;
 use Rimba\Versioning\Http\UI\Admin\Resources\Versions\Pages\EditVersion;
 use Rimba\Versioning\Http\UI\Admin\Resources\Versions\Pages\ListVersions;
@@ -13,10 +17,6 @@ use Rimba\Versioning\Http\UI\Admin\Resources\Versions\Schemas\VersionForm;
 use Rimba\Versioning\Http\UI\Admin\Resources\Versions\Schemas\VersionInfolist;
 use Rimba\Versioning\Http\UI\Admin\Resources\Versions\Tables\VersionsTable;
 use Rimba\Versioning\Models\Version;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Table;
 
 class VersionResource extends Resource
 {

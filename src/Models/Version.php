@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Rimba\Versioning\Models;
 
-use Rimba\Versioning\Builders\VersionBuilder;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Auth;
+use Rimba\Versioning\Builders\VersionBuilder;
 
 #[Fillable([
     'versionable_type',

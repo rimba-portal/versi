@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Rimba\Versioning\Builders;
 
+use Illuminate\Database\Eloquent\Model;
 use Rimba\Versioning\Enums\VersionIncrementType;
 use Rimba\Versioning\Models\Version;
-use Illuminate\Database\Eloquent\Model;
 
 class MakeVersionBuilder
 {

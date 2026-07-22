@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Rimba\Versioning\Http\UI\Admin\Resources\Versions\RelationManagers;
 
-use Rimba\Versioning\Enums\VersionStatus;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Rimba\Versioning\Enums\VersionStatus;
 
 class VersionsRelationManager extends RelationManager
 {

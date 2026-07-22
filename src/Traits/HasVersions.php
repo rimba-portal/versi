@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Rimba\Versioning\Traits;
 
-use Rimba\Versioning\Models\Version;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Rimba\Versioning\Models\Version;
 
 trait HasVersions
 {
