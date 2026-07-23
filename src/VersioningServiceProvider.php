@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rimba\Versioning;
 
 use Filament\Facades\Filament as FacadesFilament;
-use Rimba\Base\BitesServiceProvider;
+use Rimba\Base\Services\BitesServiceProvider;
 use Rimba\Versioning\Traits\HasVersions;
 
 class VersioningServiceProvider extends BitesServiceProvider
