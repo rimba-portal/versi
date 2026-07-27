@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Rimba\Versioning;
 
-use Filament\Facades\Filament as FacadesFilament;
 use Rimba\Base\Services\BitesServiceProvider;
+use Rimba\Versioning\Http\UI\Admin\Resources\Versions\RelationManagers\VersionsRelationManager;
 use Rimba\Versioning\Traits\HasVersions;
+use Filament\Facades\Filament as FacadesFilament;
+
 
 class VersioningServiceProvider extends BitesServiceProvider
 {
-    protected string $configFile = __DIR__.'/../config/bites.php';
+    protected string $configFile = __DIR__ . '/../config/bites.php';
 
     protected function bootPackage(): void
     {
@@ -27,9 +29,9 @@ class VersioningServiceProvider extends BitesServiceProvider
         });
 
     }
-
     protected function registerPackage(): void
     {
         //
     }
+
 }
