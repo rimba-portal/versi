@@ -17,10 +17,13 @@ use Rimba\Versioning\Http\UI\Admin\Resources\Versions\Schemas\VersionForm;
 use Rimba\Versioning\Http\UI\Admin\Resources\Versions\Schemas\VersionInfolist;
 use Rimba\Versioning\Http\UI\Admin\Resources\Versions\Tables\VersionsTable;
 use Rimba\Versioning\Models\Version;
+use UnitEnum;
 
 class VersionResource extends Resource
 {
     protected static ?string $model = Version::class;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Versioning';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
