@@ -60,6 +60,7 @@ class Version extends Model
 
                 return;
             }
+
             $this->revisionType = $value
                 ? VersionIncrementType::from(strtolower($value))
                 : null;
