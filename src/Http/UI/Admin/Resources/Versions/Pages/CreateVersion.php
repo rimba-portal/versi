@@ -10,4 +10,7 @@ use Rimba\Versioning\Http\UI\Admin\Resources\Versions\VersionResource;
 class CreateVersion extends CreateRecord
 {
     protected static string $resource = VersionResource::class;
+
+    // Custom
+
 }
