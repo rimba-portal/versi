@@ -9,12 +9,12 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Rimba\Versioning\Builders\VersionBuilder;
 use Rimba\Versioning\Enums\ContentType;
 use Rimba\Versioning\Enums\VersionIncrementType;
 use Rimba\Versioning\Enums\VersionStatus;
 use Rimba\Versioning\Services\SemanticVersionService;
-use Illuminate\Support\Facades\Route;
 
 #[Fillable([
     'versionable_type',
@@ -227,15 +227,14 @@ class Version extends Model
             ContentType::FilamentPage,
             ContentType::FilamentResource,
             ContentType::Dashboard,
-            ContentType::Report
-            => Route::has($this->content_url)
+            ContentType::Report => Route::has($this->content_url)
                 ? route($this->content_url)
                 : '#',
 
-            default
-            => $this->content_url,
+            default => $this->content_url,
         };
     }
+
     public function openInNewTab(): bool
     {
         return match (ContentType::from($this->content_type)) {
