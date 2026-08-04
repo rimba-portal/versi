@@ -14,6 +14,7 @@ use Rimba\Versioning\Enums\ContentType;
 use Rimba\Versioning\Enums\VersionIncrementType;
 use Rimba\Versioning\Enums\VersionStatus;
 use Rimba\Versioning\Services\SemanticVersionService;
+use Illuminate\Support\Facades\Route;
 
 #[Fillable([
     'versionable_type',
@@ -213,5 +214,41 @@ class Version extends Model
         }
 
         $version->upload_by = 'System';
+    }
+
+    public function url(): ?string
+    {
+        if (! $this->content_url) {
+            return null;
+        }
+
+        return match (ContentType::from($this->content_type)) {
+            ContentType::Route,
+            ContentType::FilamentPage,
+            ContentType::FilamentResource,
+            ContentType::Dashboard,
+            ContentType::Report
+            => Route::has($this->content_url)
+                ? route($this->content_url)
+                : '#',
+
+            default
+            => $this->content_url,
+        };
+    }
+    public function openInNewTab(): bool
+    {
+        return match (ContentType::from($this->content_type)) {
+            ContentType::Url,
+            ContentType::Markdown,
+            ContentType::Document,
+            ContentType::Folder,
+            ContentType::Api,
+            ContentType::File,
+            ContentType::Video,
+            ContentType::Html => true,
+
+            default => false,
+        };
     }
 }
