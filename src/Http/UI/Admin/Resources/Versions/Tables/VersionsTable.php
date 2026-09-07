@@ -24,13 +24,7 @@ class VersionsTable
                     ->sortable(),
                 TextColumn::make('version')
                     ->searchable(),
-                TextColumn::make('major')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('minor')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('patch')
+                TextColumn::make('revision')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('status')
