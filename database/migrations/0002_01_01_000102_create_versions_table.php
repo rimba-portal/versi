@@ -21,6 +21,9 @@ return new class extends Migration
 
             $table->string('status')->default('draft');
 
+            $table->string('original_name')->nullable();
+            $table->string('mime_type')->nullable();
+            $table->unsignedBigInteger('content_size')->nullable();
             $table->string('content_type')->nullable();
             $table->text('content_url');
 

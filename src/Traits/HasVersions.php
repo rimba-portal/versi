@@ -28,7 +28,8 @@ trait HasVersions
     public function latestVersion(): ?Version
     {
         return $this->versions()
-            ->latest('id')
+            ->latestVersion()
+            ->orderByDesc('revision')
             ->first();
     }
 }
