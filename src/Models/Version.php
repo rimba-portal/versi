@@ -36,9 +36,6 @@ use Rimba\Versioning\Services\SemanticVersionService;
     'released_at',
     'upload_by',
     'notes',
-
-    // virtual attribute only
-    'revision_type',
 ])]
 class Version extends Model
 {
@@ -54,24 +51,24 @@ class Version extends Model
         return $this->morphTo();
     }
 
-    protected function revisionType(): Attribute
-    {
-        return Attribute::make(get: function (): ?VersionIncrementType {
-            return $this->revisionType;
-        }, set: function (string|VersionIncrementType|null $value) {
-            if ($value instanceof VersionIncrementType) {
-                $this->revisionType = $value;
+    // protected function revisionType(): Attribute
+    // {
+    //     return Attribute::make(get: function (): ?VersionIncrementType {
+    //         return $this->revisionType;
+    //     }, set: function (string|VersionIncrementType|null $value) {
+    //         if ($value instanceof VersionIncrementType) {
+    //             $this->revisionType = $value;
 
-                return;
-            }
+    //             return;
+    //         }
 
-            $this->revisionType = $value
-                ? VersionIncrementType::from(strtolower($value))
-                : null;
+    //         $this->revisionType = $value
+    //             ? VersionIncrementType::from(strtolower($value))
+    //             : null;
 
-            return [];
-        });
-    }
+    //         return [];
+    //     });
+    // }
 
     protected function casts(): array
     {
@@ -127,10 +124,12 @@ class Version extends Model
             return;
         }
 
-        [$major, $minor, $patch] = static::nextSemanticVersion(
-            latest: $latest,
-            increment: $version->revision_type ?? VersionIncrementType::Patch,
-        );
+        [$major, $minor, $patch] =
+            static::nextSemanticVersion(
+                latest: $latest,
+                increment: $version->getRevisionType()
+                    ?? VersionIncrementType::Patch,
+            );
 
         $version->major = $major;
         $version->minor = $minor;
@@ -252,5 +251,29 @@ class Version extends Model
 
             default => false,
         };
+    }
+
+    public function setRevisionType(
+        VersionIncrementType|string|null $value,
+    ): static {
+
+        if ($value instanceof VersionIncrementType) {
+            $this->revisionType = $value;
+
+            return $this;
+        }
+
+        $this->revisionType = filled($value)
+            ? VersionIncrementType::from(
+                strtolower($value)
+            )
+            : null;
+
+        return $this;
+    }
+
+    public function getRevisionType(): ?VersionIncrementType
+    {
+        return $this->revisionType;
     }
 }
