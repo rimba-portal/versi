@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use Rimba\Versioning\Builders\VersionBuilder;
 use Rimba\Versioning\Enums\ContentType;
 use Rimba\Versioning\Enums\VersionStatus;
+use Rimba\Versioning\Services\VersionDefaults;
 
 #[Fillable([
     'versionable_type',
@@ -35,6 +36,13 @@ use Rimba\Versioning\Enums\VersionStatus;
 ])]
 class Version extends Model
 {
+    protected static function booted(): void
+    {
+        static::creating(function (Version $version): void {
+            app(VersionDefaults::class)->apply($version);
+        });
+    }
+
     public function newEloquentBuilder($query): VersionBuilder
     {
         return new VersionBuilder($query);

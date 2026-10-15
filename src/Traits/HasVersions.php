@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Rimba\Versioning\Traits;
 
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Rimba\Versioning\Actions\CreateVersion;
+use Rimba\Versioning\Enums\VersionIncrementType;
 use Rimba\Versioning\Models\Version;
 
 trait HasVersions
@@ -14,6 +16,17 @@ trait HasVersions
         return $this->morphMany(
             Version::class,
             'versionable',
+        );
+    }
+
+    public function createVersion(
+        array $attributes = [],
+        VersionIncrementType $increment = VersionIncrementType::Patch,
+    ): Version {
+        return app(CreateVersion::class)->execute(
+            model: $this,
+            increment: $increment,
+            attributes: $attributes,
         );
     }
 
