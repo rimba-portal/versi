@@ -8,7 +8,6 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use Rimba\Versioning\Http\UI\Admin\Resources\Versions\Pages\CreateVersion;
 use Rimba\Versioning\Http\UI\Admin\Resources\Versions\Pages\EditVersion;
 use Rimba\Versioning\Http\UI\Admin\Resources\Versions\Pages\ListVersions;
 use Rimba\Versioning\Http\UI\Admin\Resources\Versions\Pages\ViewVersion;
@@ -24,7 +23,7 @@ class VersionResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Versioning';
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-play';
+    protected static string|BackedEnum|null $navigationIcon = 'bites-version';
 
     protected static ?int $navigationSort = 24;
 
@@ -47,19 +46,15 @@ class VersionResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
     {
         return [
             'index' => ListVersions::route('/'),
-            'create' => CreateVersion::route('/create'),
             'view' => ViewVersion::route('/{record}'),
             'edit' => EditVersion::route('/{record}/edit'),
-            //
         ];
     }
 }

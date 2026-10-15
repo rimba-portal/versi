@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Rimba\Versioning\Http\UI\Admin\Resources\Versions\Pages;
 
-use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
 use Rimba\Versioning\Http\UI\Admin\Resources\Versions\VersionResource;
@@ -17,7 +16,6 @@ class EditVersion extends EditRecord
     {
         return [
             ViewAction::make(),
-            DeleteAction::make(),
         ];
     }
 }

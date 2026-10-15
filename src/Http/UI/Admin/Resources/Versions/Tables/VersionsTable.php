@@ -4,64 +4,69 @@ declare(strict_types=1);
 
 namespace Rimba\Versioning\Http\UI\Admin\Resources\Versions\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Rimba\Versioning\Enums\ContentType;
+use Rimba\Versioning\Enums\VersionStatus;
 
-class VersionsTable
+final class VersionsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
                 TextColumn::make('versionable_type')
+                    ->label('Owner')
+                    ->formatStateUsing(fn (string $state): string => class_basename($state))
                     ->searchable(),
+
                 TextColumn::make('versionable_id')
-                    ->numeric()
+                    ->label('Owner ID')
                     ->sortable(),
+
                 TextColumn::make('version')
+                    ->badge()
+                    ->sortable()
                     ->searchable(),
+
                 TextColumn::make('revision')
-                    ->numeric()
                     ->sortable(),
+
                 TextColumn::make('status')
-                    ->searchable(),
+                    ->badge()
+                    ->sortable(),
+
                 TextColumn::make('content_type')
+                    ->badge()
+                    ->toggleable(),
+
+                TextColumn::make('content_url')
+                    ->label('Content')
+                    ->limit(50)
                     ->searchable(),
-                TextColumn::make('checksum')
-                    ->searchable(),
-                TextColumn::make('effective_from')
-                    ->dateTime()
-                    ->sortable(),
-                TextColumn::make('effective_until')
-                    ->dateTime()
-                    ->sortable(),
+
                 TextColumn::make('released_at')
                     ->dateTime()
                     ->sortable(),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->options(VersionStatus::class),
+
+                SelectFilter::make('content_type')
+                    ->options(ContentType::class),
             ])
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
             ]);
     }
 }

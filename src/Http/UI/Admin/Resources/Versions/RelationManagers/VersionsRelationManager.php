@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 namespace Rimba\Versioning\Http\UI\Admin\Resources\Versions\RelationManagers;
 
-use Filament\Actions;
-use Filament\Forms;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
-use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Rimba\Versioning\Actions\CreateVersion;
 use Rimba\Versioning\Enums\ContentType;
 use Rimba\Versioning\Enums\VersionIncrementType;
 use Rimba\Versioning\Enums\VersionStatus;
@@ -22,90 +31,119 @@ class VersionsRelationManager extends RelationManager
 
     public function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                Forms\Components\Select::make('revision_type')
-                    ->label('Revision Type')
-                    ->options([
-                        VersionIncrementType::Major->value => 'Major',
-                        VersionIncrementType::Minor->value => 'Minor',
-                        VersionIncrementType::Patch->value => 'Patch',
-                    ])
-                    ->default(VersionIncrementType::Patch->value)
-                    ->dehydrated(false)
-                    ->helperText('Used only to calculate the next version number.'),
+        return $schema->components([
+            Select::make('status')
+                ->options(VersionStatus::class)
+                ->default(VersionStatus::Draft->value)
+                ->required(),
 
-                Forms\Components\Select::make('content_type')
-                    ->options(ContentType::options())
-                    ->default(ContentType::Url->value)
-                    ->required(),
+            Select::make('content_type')
+                ->options(ContentType::class)
+                ->default(ContentType::Url->value)
+                ->required(),
 
-                Forms\Components\TextInput::make('content_url')
-                    ->label('Content URL / Route Name')
-                    ->required(),
+            TextInput::make('content_url')
+                ->label('Content URL / Route Name')
+                ->required(),
 
-                Forms\Components\Select::make('status')
-                    ->options(VersionStatus::class)
-                    ->default(VersionStatus::Released->value)
-                    ->required(),
+            DateTimePicker::make('effective_from'),
+            DateTimePicker::make('effective_until'),
 
-                Forms\Components\DateTimePicker::make('effective_from'),
-
-                Forms\Components\DateTimePicker::make('effective_until'),
-
-                Forms\Components\Textarea::make('notes')
-                    ->maxLength(65535)
-                    ->columnSpanFull(),
-            ]);
+            Textarea::make('notes')
+                ->maxLength(65535)
+                ->columnSpanFull(),
+        ]);
     }
 
     public function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('version')
-                    ->sortable()
-                    ->searchable()
-                    ->badge(),
-
-                Tables\Columns\TextColumn::make('revision')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('version')
                     ->badge()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('content_type')
+                TextColumn::make('revision')
+                    ->sortable(),
+
+                TextColumn::make('status')
+                    ->badge()
+                    ->sortable(),
+
+                TextColumn::make('content_type')
                     ->badge()
                     ->toggleable(),
 
-                Tables\Columns\TextColumn::make('content_url')
+                TextColumn::make('content_url')
                     ->label('Content')
                     ->limit(50)
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('effective_from')
+                TextColumn::make('effective_from')
                     ->dateTime()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make('released_at')
+                TextColumn::make('released_at')
                     ->dateTime()
                     ->sortable(),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('status')
+                SelectFilter::make('status')
                     ->options(VersionStatus::class),
 
-                Tables\Filters\SelectFilter::make('content_type')
-                    ->options(ContentType::options()),
+                SelectFilter::make('content_type')
+                    ->options(ContentType::class),
             ])
             ->headerActions([
-                Actions\CreateAction::make(),
+                Action::make('createVersion')
+                    ->label('New Version')
+                    ->icon('heroicon-o-plus')
+                    ->schema([
+                        Select::make('increment')
+                            ->options(VersionIncrementType::class)
+                            ->default(VersionIncrementType::Patch->value)
+                            ->required(),
+
+                        Select::make('status')
+                            ->options(VersionStatus::class)
+                            ->default(VersionStatus::Draft->value)
+                            ->required(),
+
+                        Select::make('content_type')
+                            ->options(ContentType::class)
+                            ->default(ContentType::Url->value)
+                            ->required(),
+
+                        TextInput::make('content_url')
+                            ->label('Content URL / Route Name')
+                            ->required(),
+
+                        DateTimePicker::make('effective_from'),
+                        DateTimePicker::make('effective_until'),
+
+                        Textarea::make('notes')
+                            ->columnSpanFull(),
+                    ])
+                    ->action(function (array $data): void {
+                        $versionIncrementType = VersionIncrementType::from($data['increment']);
+                        unset($data['increment']);
+
+                        app(CreateVersion::class)->execute(
+                            model: $this->getOwnerRecord(),
+                            increment: $versionIncrementType,
+                            attributes: $data,
+                        );
+
+                        Notification::make()
+                            ->success()
+                            ->title('Version created')
+                            ->send();
+                    }),
             ])
             ->recordActions([
-                Actions\ViewAction::make(),
-                Actions\EditAction::make(),
-                Actions\DeleteAction::make(),
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ]);
     }
 }

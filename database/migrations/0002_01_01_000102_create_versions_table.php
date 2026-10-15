@@ -38,6 +38,9 @@ return new class extends Migration
 
             $table->timestamps();
             $table->unique(['versionable_type', 'versionable_id', 'content_url']);
+
+            $table->index(['versionable_type', 'versionable_id', 'major', 'minor', 'patch'], 'versions_owner_semver_index');
+            $table->index(['versionable_type', 'versionable_id', 'status'], 'versions_owner_status_index');
         });
     }
 

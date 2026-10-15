@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Rimba\Versioning\Enums;
 
-enum ContentType: string
+use Filament\Support\Contracts\HasLabel;
+
+enum ContentType: string implements HasLabel
 {
     case FilamentPage = 'filament-page';
     case FilamentResource = 'filament-resource';
@@ -20,17 +22,8 @@ enum ContentType: string
     case Video = 'video';
     case Html = 'html';
 
-    public function label(): string
+    public function getLabel(): ?string
     {
         return ucwords(str_replace('-', ' ', $this->value));
-    }
-
-    public static function options(): array
-    {
-        return collect(self::cases())
-            ->mapWithKeys(fn (self $case): array => [
-                $case->value => $case->label(),
-            ])
-            ->all();
     }
 }

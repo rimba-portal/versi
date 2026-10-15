@@ -13,7 +13,7 @@ trait HasVersions
     {
         return $this->morphMany(
             Version::class,
-            'versionable'
+            'versionable',
         );
     }
 

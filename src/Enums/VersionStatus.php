@@ -4,24 +4,23 @@ declare(strict_types=1);
 
 namespace Rimba\Versioning\Enums;
 
-enum VersionStatus: string
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasLabel;
+
+enum VersionStatus: string implements HasColor, HasLabel
 {
     case Draft = 'draft';
-
     case Review = 'review';
-
     case Released = 'released';
-
     case Deprecated = 'deprecated';
-
     case Archived = 'archived';
 
-    public function label(): string
+    public function getLabel(): ?string
     {
         return ucfirst($this->value);
     }
 
-    public function color(): string
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::Draft => 'gray',
@@ -30,14 +29,5 @@ enum VersionStatus: string
             self::Deprecated => 'danger',
             self::Archived => 'gray',
         };
-    }
-
-    public static function options(): array
-    {
-        return collect(self::cases())
-            ->mapWithKeys(fn (self $case): array => [
-                $case->value => $case->label(),
-            ])
-            ->all();
     }
 }
